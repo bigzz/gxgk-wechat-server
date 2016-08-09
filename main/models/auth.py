@@ -14,16 +14,12 @@ class Auth(db.Model):
                        nullable=False)
     studentid = db.Column(db.String(20), nullable=True)
     studentpwd = db.Column(db.String(100), nullable=True)
-    libraryid = db.Column(db.String(20), nullable=True)
-    librarypwd = db.Column(db.String(100), nullable=True)
 
     def __init__(self, openid, studentid=None, studentpwd=None, libraryid=None,
                  librarypwd=None):
         self.openid = openid
         self.studentid = studentid
         self.studentpwd = studentpwd
-        self.libraryid = libraryid
-        self.librarypwd = librarypwd
 
     def __repr__(self):
         return '<openid %r>' % self.openid

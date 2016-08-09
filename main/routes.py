@@ -6,7 +6,7 @@ from flask import request, render_template, jsonify, Markup, abort, \
 from . import app, redis
 from .utils import check_signature, get_jsapi_signature_data
 from .response import wechat_response
-from .plugins import score, library
+from .plugins import score
 from .models import is_user_exists
 import ast
 
@@ -65,50 +65,6 @@ def auth_score_result(openid=None):
             abort(404)
     else:
         abort(404)
-
-
-@app.route('/auth-library/<openid>', methods=['GET', 'POST'])
-def auth_library(openid=None):
-    """借书卡账号绑定"""
-    if request.method == 'POST':
-        libraryid = request.form.get('libraryid', '')
-        librarypwd = request.form.get('librarypwd', '')
-        # 根据用户输入的信息，模拟登陆
-        if libraryid and librarypwd and is_user_exists(openid):
-            library.borrowing_record.delay(openid, libraryid, librarypwd, check_login=True)
-            errmsg = 'ok'
-        else:
-            errmsg = u'卡号或者密码格式不合法'
-        return jsonify({'errmsg': errmsg})
-    elif is_user_exists(openid):
-        jsapi = get_jsapi_signature_data(request.url)
-        jsapi['jsApiList'] = ['hideAllNonBaseMenuItem']
-        return render_template('auth.html',
-                               title=u'图书馆查询',
-                               desc=u'请绑定借书卡，请勿分享本页面',
-                               username_label=u'卡号',
-                               username_label_placeholder=u'请输入你的借书卡号',
-                               password_label_placeholder=u'默认是卡号后六位',
-                               baidu_analytics=app.config['BAIDU_ANALYTICS'],
-                               jsapi=Markup(jsapi))
-    else:
-        abort(404)
-
-
-@app.route('/auth-library/<openid>/result', methods=['GET'])
-def auth_library_result(openid=None):
-    """查询借书卡绑定结果"""
-    if is_user_exists(openid):
-        redis_prefix = 'wechat:user:auth:library:'
-        errmsg = redis.get(redis_prefix + openid)
-        if errmsg:
-            redis.delete(redis_prefix + openid)
-            return jsonify({'errmsg': errmsg})
-        else:
-            abort(404)
-    else:
-        abort(404)
-
 
 @app.route('/score-report/<openid>', methods=['GET'])
 def school_report_card(openid=None):

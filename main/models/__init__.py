@@ -10,7 +10,6 @@ from ..plugins.state import get_user_last_interact_time
 db = SQLAlchemy(app)
 
 from .auth import Auth
-from .express import Express
 from .sign import Sign
 from .user import User
 
@@ -156,35 +155,6 @@ def get_sign_keepdays_ranklist(today_timestamp):
     return data
 
 
-def get_express_num(openid, num):
-    """读取快递信息"""
-    express_info = Express.query.filter_by(openid=openid, num=num).first()
-    return express_info
-
-
-def set_express_num(openid, num, com_code, lastupdate, ischeck):
-    """写入快递信息"""
-    express_info = get_express_num(openid, num)
-    if not express_info:
-        express = Express(openid=openid,
-                          num=num,
-                          comcode=com_code,
-                          lastupdate=lastupdate,
-                          ischeck=ischeck)
-        express.save()
-    else:
-        if express_info.lastupdate != lastupdate:
-            express_info.lastupdate = lastupdate
-            express_info.ischeck = ischeck
-            express_info.update()
-
-
-def get_all_uncheck_express():
-    """读取未签收的快递信息"""
-    express_info = Express.query.filter(Express.ischeck != 3).all()
-    return express_info
-
-
 def get_all_auth_info():
     """读取全部授权账号信息"""
     auth_info = Auth.query.all()
@@ -213,28 +183,6 @@ def get_user_student_info(openid):
             return False
 
 
-def get_user_library_info(openid):
-    """读取绑定的图书馆账号"""
-    redis_prefix = "wechat:user:"
-    user_info_cache = redis.hgetall(redis_prefix + openid)
-
-    if 'libraryid' in user_info_cache and 'librarypwd' in user_info_cache:
-        return user_info_cache
-    else:
-        auth_info = Auth.query.filter_by(openid=openid).first()
-        if auth_info and auth_info.libraryid and auth_info.librarypwd:
-            # 写入缓存
-            redis.hmset(redis_prefix + openid, {
-                "libraryid": auth_info.libraryid,
-                "librarypwd": auth_info.librarypwd,
-            })
-            user_info_cache['libraryid'] = auth_info.libraryid
-            user_info_cache['librarypwd'] = auth_info.librarypwd
-            return user_info_cache
-        else:
-            return False
-
-
 def set_user_student_info(openid, studentid, studentpwd):
     """写入绑定的教务管理系统账号"""
     redis_prefix = "wechat:user:"
@@ -255,26 +203,6 @@ def set_user_student_info(openid, studentid, studentpwd):
         "studentpwd": studentpwd
     })
 
-
-def set_user_library_info(openid, libraryid, librarypwd):
-    """写入绑定的借书卡账号"""
-    redis_prefix = "wechat:user:"
-    auth_info = Auth.query.filter_by(openid=openid).first()
-    if not auth_info:
-        auth = Auth(openid=openid,
-                    libraryid=libraryid,
-                    librarypwd=librarypwd)
-        auth.save()
-    else:
-        auth_info.libraryid = libraryid
-        auth_info.librarypwd = librarypwd
-        auth_info.update()
-
-    # 写入缓存
-    redis.hmset(redis_prefix + openid, {
-        "libraryid": libraryid,
-        "librarypwd": librarypwd
-    })
 
 
 def set_user_realname_and_classname(openid, realname, classname):
