@@ -66,32 +66,9 @@ MENU_SETTING = {
             "name": "校园生活",
             "sub_button": [
                 {
-                    "type": "view",
-                    "name": "广科论坛",
-                    "url": "http://wsq.discuz.qq.com/?siteid=264557099",
-                    "sub_button": []
-                },
-                {
                     "type": "click",
                     "name": "常用电话",
                     "key": "phone_number",
-                    "sub_button": []
-                }, {
-                    "type": "view",
-                    "name": "公交路线",
-                    "url": "http://mp.weixin.qq.com/mp/appmsg/show?__biz=MjM5NTY3NjAyMg==&appmsgid=10000022&itemidx=1&sign=4015ca2f093456d0b51a4e7b5663a242#wechat_redirect",
-                    "sub_button": []
-                },
-                {
-                    "type": "click",
-                    "name": "单号查快递",
-                    "key": "express",
-                    "sub_button": []
-                },
-                {
-                    "type": "scancode_waitmsg",
-                    "name": "扫码查快递",
-                    "key": "scan_express_code",
                     "sub_button": []
                 }
             ]
@@ -103,30 +80,6 @@ MENU_SETTING = {
                     "type": "click",
                     "name": "期末成绩",
                     "key": "score",
-                    "sub_button": []
-                },
-                {
-                    "type": "view",
-                    "name": "四六级成绩",
-                    "url": "http://115.159.64.43/CETQuery/",
-                    "sub_button": []
-                },
-                {
-                    "type": "view",
-                    "name": "图书馆找书",
-                    "url": "http://61.142.33.201:8090/sms/opac/search/showiphoneSearch.action",
-                    "sub_button": []
-                },
-                {
-                    "type": "click",
-                    "name": "借书记录",
-                    "key": "borrowing_record",
-                    "sub_button": []
-                },
-                {
-                    "type": "click",
-                    "name": "一键续借",
-                    "key": "renew_books",
                     "sub_button": []
                 }
             ]
@@ -144,24 +97,6 @@ MENU_SETTING = {
                     "type": "click",
                     "name": "小喵陪聊",
                     "key": "chat_robot",
-                    "sub_button": []
-                },
-                {
-                    "type": "click",
-                    "name": "听一首歌",
-                    "key": "music",
-                    "sub_button": []
-                },
-                {
-                    "type": "view",
-                    "name": "玩小游戏",
-                    "url": "http://autobox.meiriq.com/list/302da1ab?from=gxgkcat",
-                    "sub_button": []
-                },
-                {
-                    "type": "click",
-                    "name": "东莞天气",
-                    "key": "weather",
                     "sub_button": []
                 }
             ]
